@@ -86,7 +86,7 @@ contract CPAMM {
 
 
 
-        bool isToken0 = _tokenIn < _tokenOut;
+        bool isToken0 = _tokenIn > _tokenOut;
         (IERC20 tokenIn, IERC20 tokenOut, uint reserveIn, uint reserveOut) = isToken0
             ? (IERC20(_tokenIn), IERC20(_tokenOut), reserve0[_tokenIn], reserve1[_tokenOut])
             : (IERC20(_tokenOut), IERC20(_tokenIn), reserve1[_tokenOut], reserve0[_tokenIn]);
