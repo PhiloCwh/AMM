@@ -48,7 +48,7 @@ contract CPAMM {
         return totalSupply;
     }
     function getAddress(bytes memory bytecode, bytes32 _salt)
-        public
+        internal
         view
         returns(address)
     {
@@ -61,7 +61,7 @@ contract CPAMM {
         return address(uint160(uint(hash)));
     }
 
-    function getBytecode() public pure returns(bytes memory) {
+    function getBytecode() internal pure returns(bytes memory) {
         bytes memory bytecode = type(LPToken).creationCode;
         return bytecode;
     }
@@ -74,7 +74,7 @@ contract CPAMM {
     }
 
 
-    function swap(address _tokenIn, address _tokenOut, uint _amountIn) external returns (uint amountOut) {
+    function swap(address _tokenIn, address _tokenOut, uint _amountIn) public returns (uint amountOut) {
         require(
             findLpToken[_tokenIn][_tokenOut] != address(0),
             "invalid token"
@@ -82,16 +82,14 @@ contract CPAMM {
         require(_amountIn > 0, "amount in = 0");
         require(_tokenIn != _tokenOut);
 
-
-
-
-
-        bool isToken0 = _tokenIn > _tokenOut;
-        (IERC20 tokenIn, IERC20 tokenOut, uint reserveIn, uint reserveOut) = isToken0
-            ? (IERC20(_tokenIn), IERC20(_tokenOut), reserve0[_tokenIn], reserve1[_tokenOut])
-            : (IERC20(_tokenOut), IERC20(_tokenIn), reserve1[_tokenOut], reserve0[_tokenIn]);
+        IERC20 tokenIn = IERC20(_tokenIn);
+        IERC20 tokenOut = IERC20(_tokenOut);
+        uint reserveIn = reserve0[_tokenIn];
+        uint reserveOut = reserve1[_tokenOut];
 
         tokenIn.transferFrom(msg.sender, address(this), _amountIn);
+
+
 
         /*
         How much dy for dx?
