@@ -146,6 +146,7 @@ contract CPAMM {
         
         ILPToken lptoken;//lptoken接口，为了mint 和 burn lptoken
         require(_amount0 > 0 && _amount1 > 0 ,"require _amount0 > 0 && _amount1 >0");
+        require(_token0 != _token1, "_token0 == _token1");
         IERC20 token0 = IERC20(_token0);
         IERC20 token1 = IERC20(_token1);
         token0.transferFrom(msg.sender, address(this), _amount0);
@@ -320,4 +321,3 @@ contract CPAMM {
         return x <= y ? x : y;
     }
 }
-
